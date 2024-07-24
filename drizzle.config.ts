@@ -6,8 +6,8 @@ config({ path: '.env.local' });
 console.log(process.env, 'db');
 
 export default defineConfig({
-    schema: "./schema.ts",
-    out: "./migrations",
+    schema: "./src/server/schema.ts",
+    out: "./src/server/migrations",
     dialect: "postgresql",
     dbCredentials: {
         url: process.env.POSTGRES_URL!,
