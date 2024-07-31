@@ -1,5 +1,6 @@
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Socials from "@/components/auth/socials";
+import BackButton from "@/components/auth/back-button";
 
 type CardWrapperProps = {
     children: React.ReactNode;
@@ -7,10 +8,6 @@ type CardWrapperProps = {
     backButtonHref: string;
     backButtonLabel: string;
     showSocials: boolean;
-}
-
-function BackButton() {
-    return null;
 }
 
 export const AuthCard = ({
@@ -33,7 +30,7 @@ export const AuthCard = ({
                     </CardFooter>
                 )}
                 <CardFooter>
-                    <BackButton />
+                    <BackButton href={backButtonHref} label={backButtonLabel}/>
                 </CardFooter>
             </Card>
         </>
