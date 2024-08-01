@@ -1,5 +1,6 @@
 import {boolean, integer, pgEnum, pgTable, primaryKey, serial, text, timestamp} from 'drizzle-orm/pg-core';
 import {AdapterAccountType} from "@auth/core/adapters";
+import {createId} from "@paralleldrive/cuid2";
 
 // export const usersTable = pgTable('users_table', {
 //     id: serial('id').primaryKey(),
@@ -18,9 +19,10 @@ export const posts = pgTable('posts', {
 export const users = pgTable("user", {
     id: text("id")
         .primaryKey()
-        .$defaultFn(() => crypto.randomUUID()),
+        .$defaultFn(() => createId()),
     name: text("name"),
     email: text("email").notNull(),
+    password: text("password").notNull(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
     twoFactorEnabled: boolean("twoFactorEnabled").default(false),
@@ -55,9 +57,10 @@ export const accounts = pgTable(
 export const emailTokens = pgTable(
     "email_tokens",
     {
-        id: text("id").notNull(),
+        id: text("id").notNull().$defaultFn(() => createId()),
         token: text("token").notNull(),
         expires: timestamp("expires", {mode: "date"}).notNull(),
+        email: text("email").notNull(),
     },
     (vt) => ({
         compoundKey: primaryKey({
