@@ -3,11 +3,13 @@
 import {AuthCard} from "@/components/auth/auth-card";
 import {Form} from "@/components/ui/form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {LoginSchema} from "../../../types/login-schema";
+import {LoginSchema} from "@/types/login-schema";
 import * as z from "zod";
 import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {useForm} from "react-hook-form";
+import {Button} from "@/components/ui/button";
+import Link from "next/link";
 
 export const LoginForm = () => {
     const form = useForm({
@@ -23,15 +25,19 @@ export const LoginForm = () => {
     }
 
     return (
-        <AuthCard cardTitle="Welcome back!" backButtonHref="/auth/register" backButtonLabel="Create a new  accout"
-                  showSocials >
+        <AuthCard
+            cardTitle="Welcome back!"
+            backButtonHref="/auth/register"
+            backButtonLabel="Create a new  accout"
+            showSocials
+        >
             <div>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <FormField
                             control={form.control}
                             name="email"
-                            render={(field) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
@@ -52,7 +58,7 @@ export const LoginForm = () => {
                         <FormField
                             control={form.control}
                             name="password"
-                            render={(field) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
@@ -69,6 +75,14 @@ export const LoginForm = () => {
                                 </FormItem>
                             )}
                         />
+                        <Button size="sm" variant="link" asChild>
+                            <Link href="/auth/reset">Forgot your password?</Link>
+                        </Button>
+                        <div className="flex justify-center ">
+                            <Button className="w-full">
+                                Log in
+                            </Button>
+                        </div>
                     </form>
                 </Form>
             </div>

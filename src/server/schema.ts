@@ -1,4 +1,4 @@
-import {integer, pgTable, primaryKey, serial, text, timestamp} from 'drizzle-orm/pg-core';
+import {boolean, integer, pgEnum, pgTable, primaryKey, serial, text, timestamp} from 'drizzle-orm/pg-core';
 import {AdapterAccountType} from "@auth/core/adapters";
 
 // export const usersTable = pgTable('users_table', {
@@ -7,6 +7,8 @@ import {AdapterAccountType} from "@auth/core/adapters";
 //     age: integer('age').notNull(),
 //     email: text('email').notNull().unique(),
 // });
+
+export const RoleEnum = pgEnum('role', ['user', 'admin']);
 
 export const posts = pgTable('posts', {
     id: serial('id').primaryKey().notNull(),
@@ -21,6 +23,8 @@ export const users = pgTable("user", {
     email: text("email").notNull(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
+    twoFactorEnabled: boolean("twoFactorEnabled").default(false),
+    role: RoleEnum("role").default("user"),
 })
 
 export const accounts = pgTable(
