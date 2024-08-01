@@ -15,6 +15,34 @@
       "when": 1722479964611,
       "tag": "0001_aberrant_carnage",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1722541102375,
+      "tag": "0002_bright_silver_fox",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1722541142778,
+      "tag": "0003_white_veda",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1722541177618,
+      "tag": "0004_flimsy_purifiers",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1722541211599,
+      "tag": "0005_fresh_shard",
+      "breakpoints": true
     }
   ]
 }

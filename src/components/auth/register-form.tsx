@@ -13,6 +13,7 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import {RegisterSchema} from "@/types/register-schema";
+import {emailRegister} from "@/server/actions/email-register";
 
 export const RegisterForm = () => {
     const form = useForm({
@@ -25,8 +26,14 @@ export const RegisterForm = () => {
     });
 
     const [error, setError] = useState(0);
+    const {execute, status} = useAction(emailRegister, {
+        onSuccess(data) {
+            console.log(data);
+        }
+    })
 
     function onSubmit(values: z.infer<typeof RegisterSchema>) {
+        execute(values);
         console.log(values);
     }
 
@@ -44,7 +51,7 @@ export const RegisterForm = () => {
                         control={form.control}
                         name="username"
                         render={({field}) => <FormItem>
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel>Username</FormLabel>
                             <FormControl>
                                 <Input
                                     alt="username"
