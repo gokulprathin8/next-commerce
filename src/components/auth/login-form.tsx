@@ -1,12 +1,13 @@
 'use client';
 
 import {AuthCard} from "@/components/auth/auth-card";
-import {Form, useForm} from "react-hook-form";
+import {Form} from "@/components/ui/form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {LoginSchema} from "../../../types/login-schema";
 import * as z from "zod";
 import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
+import {useForm} from "react-hook-form";
 
 export const LoginForm = () => {
     const form = useForm({
