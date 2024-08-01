@@ -7,7 +7,6 @@ export default async function Home() {
     const data = await getPosts();
     return (
         <main>
-            <Nav />
             {Date.now()}
             <p>{JSON.stringify(data)}</p>
             <form action={createPosts}>
