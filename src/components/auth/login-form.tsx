@@ -26,7 +26,9 @@ export const LoginForm = () => {
 
     const [error, setError] = useState(0);
     const {execute, status} = useAction(emailSignIn, {
-
+        onSuccess(data) {
+            console.log(data);
+        }
     });
 
     function onSubmit(values: z.infer<typeof LoginSchema>) {
