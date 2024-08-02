@@ -6,10 +6,8 @@ import {RegisterSchema} from "@/types/register-schema";
 import {db} from "@/server/db";
 import {eq} from "drizzle-orm";
 import {users} from "@/server/schema";
+import {sendVerificationEmail} from "@/server/actions/sendEmail";
 
-async function sendVerificationEmail() {
-
-}
 
 export const emailRegister = createSafeActionClient()
     .schema(RegisterSchema)
@@ -24,7 +22,7 @@ export const emailRegister = createSafeActionClient()
         if (existingUser) {
             if (!existingUser.emailVerified) {
                 const verificationToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-                await sendVerificationEmail();
+                await sendVerificationEmail(verificationToken, email);
                 return {success: 'email confirmation sent'}
             }
             return {error: 'email already in use'};
