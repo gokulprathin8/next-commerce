@@ -6,7 +6,6 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import Link from "next/link";
 import {useState} from "react";
 import {useAction} from "next-safe-action/hooks";
-import {emailSignIn} from "@/server/actions/email-signin";
 import {AuthCard} from "@/components/auth/auth-card";
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
@@ -14,6 +13,8 @@ import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import {RegisterSchema} from "@/types/register-schema";
 import {emailRegister} from "@/server/actions/email-register";
+import {FormSuccess} from "@/components/auth/form-success";
+import FormError from "@/components/auth/form-error";
 
 export const RegisterForm = () => {
     const form = useForm({
@@ -25,12 +26,9 @@ export const RegisterForm = () => {
         }
     });
 
-    const [error, setError] = useState(0);
-    const {execute, status} = useAction(emailRegister, {
-        onSuccess(data) {
-            console.log(data);
-        }
-    })
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('')
+    const {execute, status} = useAction(emailRegister);
 
     function onSubmit(values: z.infer<typeof RegisterSchema>) {
         execute(values);
@@ -102,12 +100,14 @@ export const RegisterForm = () => {
                             <FormMessage />
                         </FormItem>}
                     />
+                    <FormSuccess message={success} />
+                    <FormError message={error} />
                     <Button size="sm" variant="link" asChild>
                         <Link href="/auth/reset">Forgot your password?</Link>
                     </Button>
                     <div className="flex justify-center ">
                         <Button className={cn('w-full', status === 'executing' ? 'animate-pulse' : '')}>
-                            Log in
+                            Register
                         </Button>
                     </div>
                 </form>

@@ -7,6 +7,7 @@ import {db} from "@/server/db";
 import {eq} from "drizzle-orm";
 import {users} from "@/server/schema";
 import {sendVerificationEmail} from "@/server/actions/sendEmail";
+import {generateEmailVerificationToken} from "@/server/actions/tokens";
 
 
 export const emailRegister = createSafeActionClient()
@@ -21,8 +22,8 @@ export const emailRegister = createSafeActionClient()
         // check if user is already in database + check if they are verified
         if (existingUser) {
             if (!existingUser.emailVerified) {
-                const verificationToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-                await sendVerificationEmail(verificationToken, email);
+                const verificationToken = await generateEmailVerificationToken(email);
+                await sendVerificationEmail(verificationToken[0].email, verificationToken[0].token);
                 return {success: 'email confirmation sent'}
             }
             return {error: 'email already in use'};
@@ -30,7 +31,7 @@ export const emailRegister = createSafeActionClient()
 
         // logic for when user is not registered
         await db.insert(users).values({email, password: hashedPassword, name: username, });
-        await sendVerificationEmail();
+        const verificationToken = await generateEmailVerificationToken(email);
+        await sendVerificationEmail(verificationToken[0].email, verificationToken[0].token);
         return {success: 'email confirmation sent'};
     })
-

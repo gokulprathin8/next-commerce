@@ -12,4 +12,6 @@ export async function sendVerificationEmail(email: string, token: string) {
         subject: "Please confirm your email",
         html: `<p>Click <a href="${confirmLink}">here</a> to confirm your email</p>`
     })
+    if (error) return console.log(error)
+    if (data) return data
 }
