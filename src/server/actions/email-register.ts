@@ -34,4 +34,4 @@ export const emailRegister = createSafeActionClient()
         const verificationToken = await generateEmailVerificationToken(email);
         await sendVerificationEmail(verificationToken[0].email, verificationToken[0].token);
         return {success: 'email confirmation sent'};
-    })
+    });

@@ -28,7 +28,14 @@ export const RegisterForm = () => {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('')
-    const {execute, status} = useAction(emailRegister);
+    const {execute, status} = useAction(emailRegister, {
+        onSuccess: ({data}) => {
+           setSuccess(String(data?.success));
+        },
+        onError: ({error}) => {
+            setError(String(error));
+        }
+    });
 
     function onSubmit(values: z.infer<typeof RegisterSchema>) {
         execute(values);
