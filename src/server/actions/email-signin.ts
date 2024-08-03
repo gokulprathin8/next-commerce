@@ -8,6 +8,8 @@ import {users} from "@/server/schema";
 import {generateEmailVerificationToken} from "@/server/actions/tokens";
 import {sendVerificationEmail} from "@/server/actions/sendEmail";
 import {signIn} from "@/server/auth";
+import {AuthError} from "next-auth";
+import {isRedirectError} from "next/dist/client/components/redirect";
 
 export const emailSignIn = createSafeActionClient()
     .schema(LoginSchema)
@@ -35,13 +37,23 @@ export const emailSignIn = createSafeActionClient()
             await signIn("credentials", {
                 email,
                 password,
-                redirectTo: "/home",
+                redirectTo: "/"
             })
 
             return {success: email};
         } catch (error) {
-            console.error(error);
-            return {error: `An error occurred: ${error}`};
+            console.log(error);
+            if (isRedirectError(error)) {
+                throw error;
+            }
+            if (error instanceof AuthError) {
+                switch (error.type) {
+                    case "CredentialsSignin":
+                        return { msg: "Invalid credentials" , status: "error"};
+                    default:
+                        return { msg: "Something went wrong", status: "error" };
+                }
+            }
         }
     }
 ));
