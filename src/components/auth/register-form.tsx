@@ -38,8 +38,8 @@ export const RegisterForm = () => {
     });
 
     function onSubmit(values: z.infer<typeof RegisterSchema>) {
-        execute(values);
         console.log(values);
+        execute(values);
     }
 
     return <AuthCard

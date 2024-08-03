@@ -35,11 +35,10 @@ export const emailSignIn = createSafeActionClient()
             await signIn("credentials", {
                 email,
                 password,
-                redirectTo: "/",
+                redirectTo: "/home",
             })
 
             return {success: email};
-
         } catch (error) {
             console.error(error);
             return {error: `An error occurred: ${error}`};

@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, {CredentialsSignin} from "next-auth"
 import { DrizzleAdapter} from "@auth/drizzle-adapter";
 import type { Adapter } from 'next-auth/adapters';
 import { db } from "@/server/db"
@@ -10,6 +10,9 @@ import {eq} from "drizzle-orm";
 import {users} from "@/server/schema";
 import bcrypt from "bcrypt";
 
+// class InvalidLoginError extends CredentialsSignin {
+//     code = "Invalid identifier or password"
+// }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: DrizzleAdapter(db) as Adapter,
@@ -39,8 +42,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     if (passwordMatch) {
                         return user;
                     }
-                    return null;
                 }
+                return null;
             }
         })
     ],

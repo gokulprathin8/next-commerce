@@ -30,7 +30,7 @@ export const emailRegister = createSafeActionClient()
         }
 
         // logic for when user is not registered
-        await db.insert(users).values({email, password: hashedPassword, name: username, });
+        await db.insert(users).values({email, password: hashedPassword });
         const verificationToken = await generateEmailVerificationToken(email);
         await sendVerificationEmail(verificationToken[0].email, verificationToken[0].token);
         return {success: 'email confirmation sent'};
