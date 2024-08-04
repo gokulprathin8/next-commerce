@@ -2,8 +2,7 @@
 
 import {db} from "@/server/db";
 import {eq} from "drizzle-orm";
-import {emailTokens, users} from "@/server/schema";
-import {retry} from "next/dist/compiled/@next/font/dist/google/retry";
+import {emailTokens, passwordResetTokens, users} from "@/server/schema";
 
 async function getVerificationTokenByEmail(email: string) {
     try {
@@ -12,7 +11,6 @@ async function getVerificationTokenByEmail(email: string) {
         })
     } catch (error) {
         return null;
-
     }
 }
 
@@ -25,6 +23,16 @@ export const generateEmailVerificationToken = async (email: string) => {
         await db.delete(emailTokens).where(eq(emailTokens.id, existingToken.id));
     }
     return db.insert(emailTokens).values({email, token, expires: expiration}).returning();
+}
+
+export const getPasswordResetTokenByToken = async (token: string) => {
+    try {
+        return await db.query.passwordResetTokens.findFirst({
+            where: eq(passwordResetTokens.token, token)
+        });
+    } catch(error) {
+        return null;
+    }
 }
 
 export const newVerification = async (token: string) => {

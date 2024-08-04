@@ -13,6 +13,7 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
 import {NewPasswordSchema} from "@/types/new-password-schema";
+import {passwordReset} from "@/server/actions/new-password";
 
 export const NewPasswordForm = () => {
     const form = useForm<z.infer<typeof NewPasswordSchema>>({
@@ -25,47 +26,28 @@ export const NewPasswordForm = () => {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    // const {execute, status} = useAction(emailSignIn, {
-    //     onSuccess({data}) {
-    //         setSuccess(String(data?.success));
-    //     },
-    //     onError({error}) {
-    //         setError(String(error));
-    //     }
-    // });
+    const {execute, status} = useAction(passwordReset, {
+        onSuccess({data}) {
+            setSuccess(String(data?.success));
+        },
+        onError({error}) {
+            setError(String(error));
+        }
+    });
 
     function onSubmit(values: z.infer<typeof NewPasswordSchema>) {
-
+        execute(values);
     }
 
     return <AuthCard
-        cardTitle="Welcome back!"
-        backButtonHref="/auth/register"
-        backButtonLabel="Create a new  accout"
+        cardTitle="Enter a new password"
+        backButtonHref="/auth/login"
+        backButtonLabel="Back to Login"
         showSocials
     >
         <div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({field}) => <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input
-                                    alt="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    placeholder="johndoe@example.com"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormDescription />
-                            <FormMessage />
-                        </FormItem>}
-                    />
-
                     <FormField
                         control={form.control}
                         name="password"
@@ -91,7 +73,7 @@ export const NewPasswordForm = () => {
                     </Button>
                     <div className="flex justify-center ">
                         <Button className={cn('w-full', status === 'executing' ? 'animate-pulse' : '')}>
-                            Log in
+                            Reset password
                         </Button>
                     </div>
                 </form>
