@@ -10,4 +10,5 @@ export const passwordReset = createSafeActionClient()
     if (!token) {
         return {error: "No token found!"}
     }
+    // const existingToken = await getPasswordResetToken(token);
 }))

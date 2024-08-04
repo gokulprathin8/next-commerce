@@ -57,6 +57,13 @@
       "when": 1722542714453,
       "tag": "0007_mean_cobalt_man",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1722742093842,
+      "tag": "0008_tidy_phantom_reporter",
+      "breakpoints": true
     }
   ]
 }
