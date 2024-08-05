@@ -1,8 +1,6 @@
 'use client';
 
 import {Session} from "next-auth";
-import {buttonVariants} from "@/components/ui/button";
-import {signOut} from "next-auth/react";
 import {
     DropdownMenu,
     DropdownMenuContent, DropdownMenuItem,
@@ -21,15 +19,15 @@ export const UserButton = ({user}: Session) => {
     const {setTheme, theme} = useTheme();
     const [isChecked, setIsChecked] = useState(false);
 
+    const themeState = isChecked ? "dark" : "light";
     function switchThemeState() {
-        setIsChecked(!isChecked);
-        setTheme(isChecked ? "light" : "dark")
+        setIsChecked((prev) => !prev);
+        setTheme(themeState);
+        console.log(themeState, isChecked);
     }
 
     return (
         <>
-            {/*<h1>{user?.email}</h1>*/}
-            {/*<button onClick={() => signOut()}>Sign Out</button>*/}
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger>
                     <Avatar>
@@ -58,17 +56,20 @@ export const UserButton = ({user}: Session) => {
                     <DropdownMenuItem><Truck className="px-1 mr-1 group-hover:translate-x-1 transition-all duration-300"/>My Orders</DropdownMenuItem>
                     <DropdownMenuItem><Settings className="px-1 mr-1 group-hover:rotate-180 transition-all duration-300 ease-in-out"/> Settings</DropdownMenuItem>
                     <DropdownMenuItem>
-                        <div className="flex items-center">
-                            <Sun size="14" />
-                            <Moon size="14"/>
-                            <p>Theme <span>theme</span></p>
+                        <div className="flex items-center" onClick={(event) => event.stopPropagation()}>
+                            {!isChecked ?
+                                (
+                                <Sun size="14" />
+                                ) :
+                                <Moon size="14"/>
+                            }
+                            <p className="ml-1">Theme &nbsp;<span>{themeState}</span></p>
                             <Switch checked={isChecked} onClick={() => switchThemeState()} />
                         </div>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="focus:bg-destructive/25"><LogOut className="px-1 mr-1 group-hover:scale-75 transition-all duration-300  ease-in-out"/> SignOut</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-
         </>
     )
 }
