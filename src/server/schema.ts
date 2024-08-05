@@ -22,7 +22,7 @@ export const users = pgTable("user", {
         .$defaultFn(() => createId()),
     name: text("name"),
     email: text("email").notNull(),
-    password: text("password").notNull(),
+    password: text("password"),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
     twoFactorEnabled: boolean("twoFactorEnabled").default(false),
