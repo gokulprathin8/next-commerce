@@ -13,10 +13,8 @@ import {useTheme} from "next-themes";
 import {Switch} from "@/components/ui/switch";
 import {useEffect, useState} from "react";
 
-
-
 export const UserButton = ({user}: Session) => {
-    const {setTheme, theme} = useTheme();
+    const { theme, setTheme } = useTheme()
     const [isChecked, setIsChecked] = useState(false);
 
 
