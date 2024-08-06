@@ -11,13 +11,18 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {LogOut, Moon, Settings, Sun, Truck} from "lucide-react";
 import {useTheme} from "next-themes";
 import {Switch} from "@/components/ui/switch";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 
 
 export const UserButton = ({user}: Session) => {
     const {setTheme, theme} = useTheme();
     const [isChecked, setIsChecked] = useState(false);
+
+
+    useEffect(() => {
+        setIsChecked(theme === "dark");
+    }, [theme]);
 
     const themeState = isChecked ? "dark" : "light";
     function switchThemeState() {
