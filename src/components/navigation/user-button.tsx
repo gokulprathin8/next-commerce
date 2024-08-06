@@ -12,17 +12,18 @@ import {LogOut, Moon, Settings, Sun, Truck} from "lucide-react";
 import {useTheme} from "next-themes";
 import {Switch} from "@/components/ui/switch";
 import {useEffect, useState} from "react";
+import {redirect, useRouter} from "next/navigation";
 
 export const UserButton = ({user}: Session) => {
-    const { theme, setTheme } = useTheme()
+    const { theme, setTheme } = useTheme();
     const [isChecked, setIsChecked] = useState(false);
-
+    const router = useRouter();
 
     useEffect(() => {
         setIsChecked(theme === "dark");
     }, [theme]);
 
-    const themeState = isChecked ? "dark" : "light";
+    const themeState = isChecked ? "light" : "dark";
     function switchThemeState() {
         setIsChecked((prev) => !prev);
         setTheme(themeState);
@@ -56,8 +57,8 @@ export const UserButton = ({user}: Session) => {
                         <div>{user?.email}</div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem><Truck className="px-1 mr-1 group-hover:translate-x-1 transition-all duration-300"/>My Orders</DropdownMenuItem>
-                    <DropdownMenuItem><Settings className="px-1 mr-1 group-hover:rotate-180 transition-all duration-300 ease-in-out"/> Settings</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/dashboard/orders")}><Truck className="px-1 mr-1 group-hover:translate-x-1 duration-300"/>My Orders</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}><Settings className="px-1 mr-1 group-hover:rotate-180 duration-300 ease-in-out"/> Settings</DropdownMenuItem>
                     <DropdownMenuItem>
                         <div className="flex items-center" onClick={(event) => event.stopPropagation()}>
                             {!isChecked ?
@@ -70,9 +71,10 @@ export const UserButton = ({user}: Session) => {
                             <Switch checked={isChecked} onClick={() => switchThemeState()} />
                         </div>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="focus:bg-destructive/25"><LogOut className="px-1 mr-1 group-hover:scale-75 transition-all duration-300  ease-in-out"/> SignOut</DropdownMenuItem>
+                    <DropdownMenuItem className="focus:bg-destructive/25"><LogOut className="px-1 mr-1 group-hover:scale-75 duration-300  ease-in-out"/> SignOut</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>
+
     )
 }

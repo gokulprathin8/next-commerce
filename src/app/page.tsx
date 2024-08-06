@@ -1,8 +1,6 @@
 import {createPosts, getPosts} from "@/server/actions/posts";
 import PostSubmitButton from "@/components/post-button";
 import {Button} from "@/components/ui/button";
-import Nav from "@/components/navigation/nav";
-import {useTheme} from "next-themes";
 
 export default async function Home() {
     const data = await getPosts();
