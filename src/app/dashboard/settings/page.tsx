@@ -6,5 +6,5 @@ export default async function Settings() {
     const session = await auth();
 
     if (!session) redirect("/");
-    if (session) return <SettingsCard />;
+    if (session) return <SettingsCard session={session} />;
 }

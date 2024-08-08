@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import {SettingsSchema} from "@/types/settings-schema";
 import {Session} from "next-auth";
+import Image from "next/image";
 
 
 type SettingsForm = {
@@ -31,13 +32,14 @@ export default function SettingsCard(session: SettingsForm) {
             newPassword: undefined,
             name: session.session.user?.name || undefined,
             email: session.session.user?.email || undefined,
-            isTwoFactorEnabled: session.session.user?.isTwoFactorEnabled || undefined,
+            isTwoFactorEnabled: session.session.user?.twoFactorEnabled || undefined,
         }
     })
 
     function onSubmit(values: z.infer<typeof SettingsSchema>) {
-        execute(values);
+        // execute(values);
     }
+    console.log(session.session);
 
     return (
         <Card>
@@ -64,6 +66,74 @@ export default function SettingsCard(session: SettingsForm) {
                                 </FormItem>
                             )}
                         />
+
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Avatar</FormLabel>
+                                   <div className="flex items-center gap-4">
+                                       {!form.getValues('image') && (
+                                           <div className="font-bold">
+                                               {session.session.user?.name?.charAt(0).toUpperCase()}
+                                           </div>
+                                       )}
+                                       {form.getValues('image') && (
+                                           <Image
+                                               src={form.getValues('image')!}
+                                               className="rounded-full"
+                                               width={42}
+                                               height={42}
+                                               alt="user-form-image"
+                                           />
+                                       )}
+                                   </div>
+                                    <FormControl>
+                                        <Input placeholder="User image" type="hidden" disabled={status === "executing"} {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        This is your public display name.
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Avatar</FormLabel>
+                                    <div className="flex items-center gap-4">
+                                        {!form.getValues('image') && (
+                                            <div className="font-bold">
+                                                {session.session.user?.name?.charAt(0).toUpperCase()}
+                                            </div>
+                                        )}
+                                        {form.getValues('image') && (
+                                            <Image
+                                                src={form.getValues('image')!}
+                                                className="rounded-full"
+                                                width={42}
+                                                height={42}
+                                                alt="user-form-image"
+                                            />
+                                        )}
+                                    </div>
+                                    <FormControl>
+                                        <Input placeholder="User image" type="hidden" disabled={status === "executing"} {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        This is your public display name.
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                            />
+
                         <Button type="submit">Submit</Button>
                     </form>
                 </Form>
