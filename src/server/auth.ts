@@ -1,13 +1,13 @@
-import NextAuth, {CredentialsSignin} from "next-auth"
-import { DrizzleAdapter} from "@auth/drizzle-adapter";
-import type { Adapter } from 'next-auth/adapters';
-import { db } from "@/server/db"
+import NextAuth from "next-auth"
+import {DrizzleAdapter} from "@auth/drizzle-adapter";
+import type {Adapter} from 'next-auth/adapters';
+import {db} from "@/server/db"
 import Google from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
 import Credentials from "@auth/core/providers/credentials";
 import {LoginSchema} from "@/types/login-schema";
 import {eq} from "drizzle-orm";
-import {users} from "@/server/schema";
+import {accounts, users} from "@/server/schema";
 import bcrypt from "bcrypt";
 
 // class InvalidLoginError extends CredentialsSignin {
@@ -18,6 +18,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: DrizzleAdapter(db) as Adapter,
     secret: process.env.SECRET!,
     session: {strategy: "jwt"},
+    callbacks: {
+        async jwt({token}) {
+            if (!token.sub) return token
+            const existingUser = await db.query.users.findFirst({
+                where: eq(users.id, token.sub)
+            });
+            token.isOAuth = await db.query.accounts.findFirst({
+                where: eq(accounts.userId, existingUser?.id)
+            })
+            token.name = existingUser?.name
+            token.email = existingUser?.email
+            token.role = existingUser?.role
+            token.isTwoFactorEnabled = existingUser?.twoFactorEnabled
+            token.image = existingUser?.image
+            return token;
+        }
+    },
     providers: [
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID!,
