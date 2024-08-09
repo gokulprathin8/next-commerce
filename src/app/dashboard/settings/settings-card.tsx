@@ -41,7 +41,7 @@ export default function SettingsCard(session: SettingsForm) {
             newPassword: undefined,
             name: session.session.user?.name || undefined,
             email: session.session.user?.email || undefined,
-            isTwoFactorEnabled: session.session.user?.twoFactorEnabled || undefined,
+            isTwoFactorEnabled: session.session.user?.isTwoFactorEnabled|| undefined,
         }
     })
 
@@ -119,7 +119,6 @@ export default function SettingsCard(session: SettingsForm) {
                                     <FormControl>
                                         <Input
                                             placeholder="************"
-                                            type="hidden"
                                             disabled={status === "executing"}
                                             {...field}
                                         />
@@ -141,7 +140,6 @@ export default function SettingsCard(session: SettingsForm) {
                                     <FormControl>
                                         <Input
                                             placeholder="************"
-                                            type="hidden"
                                             disabled={status === "executing"}
                                             {...field}
                                         />
