@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import { Button } from "@/components/ui/button"
@@ -135,6 +135,7 @@ export default function SettingsCard(session: SettingsForm) {
                                             placeholder="************"
                                             disabled={status === "executing" || session.session.user.isOAuth}
                                             {...field}
+                                            type="password"
                                         />
                                     </FormControl>
                                     <FormDescription>
@@ -156,6 +157,7 @@ export default function SettingsCard(session: SettingsForm) {
                                             placeholder="************"
                                             disabled={status === "executing" || session.session.user.isOAuth}
                                             {...field}
+                                            type="password"
                                         />
                                     </FormControl>
                                     <FormDescription>
@@ -174,7 +176,11 @@ export default function SettingsCard(session: SettingsForm) {
                                     <FormLabel>Two Factor Authentication</FormLabel>
                                     <FormDescription>Enable two factor authentication for your account</FormDescription>
                                     <FormControl>
-                                       <Switch disabled={status === 'executing' || session.session.user.isOAuth }/>
+                                       <Switch
+                                           checked={field.value}
+                                           onCheckedChange={field.onChange}
+                                           disabled={status === 'executing' || session.session.user.isOAuth }
+                                       />
                                     </FormControl>
                                     <FormDescription>
                                         This is your public display name.

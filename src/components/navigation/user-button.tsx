@@ -12,7 +12,8 @@ import {LogOut, Moon, Settings, Sun, Truck} from "lucide-react";
 import {useTheme} from "next-themes";
 import {Switch} from "@/components/ui/switch";
 import {useEffect, useState} from "react";
-import {redirect, useRouter} from "next/navigation";
+import {useRouter} from "next/navigation";
+import {signOut} from "next-auth/react";
 
 export const UserButton = ({user}: Session) => {
     const { theme, setTheme } = useTheme();
@@ -37,7 +38,7 @@ export const UserButton = ({user}: Session) => {
                         {user?.image ? (
                             <>
                                 <AvatarImage src={user.image} />
-                                <AvatarFallback>CN</AvatarFallback>
+                                <AvatarFallback>GP</AvatarFallback>
                             </>
                         ) : (
                             <>
@@ -70,7 +71,7 @@ export const UserButton = ({user}: Session) => {
                             <Switch checked={isChecked} onClick={() => switchThemeState()} />
                         </div>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="focus:bg-destructive/25"><LogOut className="px-1 mr-1 group-hover:scale-75 duration-300  ease-in-out"/> SignOut</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => signOut()} className="focus:bg-destructive/25"><LogOut className="px-1 mr-1 group-hover:scale-75 duration-300  ease-in-out"/> SignOut</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>

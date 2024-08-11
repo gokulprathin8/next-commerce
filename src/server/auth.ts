@@ -8,7 +8,7 @@ import Credentials from "@auth/core/providers/credentials";
 import {LoginSchema} from "@/types/login-schema";
 import {eq} from "drizzle-orm";
 import {accounts, users} from "@/server/schema";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 // class InvalidLoginError extends CredentialsSignin {
 //     code = "Invalid identifier or password"

@@ -6,13 +6,15 @@ import {auth} from "@/server/auth";
 import {db} from "@/server/db";
 import {eq} from "drizzle-orm";
 import {users} from "@/server/schema";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import {revalidatePath} from "next/cache";
 
 export const settingsAction = createSafeActionClient()
     .schema(SettingsSchema)
     .action((async ({parsedInput}) => {
         const user = await auth();
+        console.log(user?.user, 'user details')
+        console.log(parsedInput, 'parsed input')
         if (!user) {
             return {error: "user not found"}
         }
@@ -42,18 +44,19 @@ export const settingsAction = createSafeActionClient()
 
             parsedInput.password = await bcrypt.hash(parsedInput.newPassword, 10)
             parsedInput.newPassword = undefined
-            const updatedUser = await db
-                .update(users)
-                .set({
-                    twoFactorEnabled: parsedInput.isTwoFactorEnabled,
-                    name: parsedInput.name,
-                    email: parsedInput.email,
-                    password: parsedInput.password,
-                    image: parsedInput.image
-                }).where(
-                    eq(users.id, dbUser.id)
-                )
-            revalidatePath("/dashboard/settings")
-            return {success: "settings updated"}
+
         }
+        const updatedUser = await db
+            .update(users)
+            .set({
+                twoFactorEnabled: parsedInput.isTwoFactorEnabled,
+                name: parsedInput.name,
+                email: parsedInput.email,
+                password: parsedInput.password,
+                image: parsedInput.image
+            }).where(
+                eq(users.id, dbUser.id)
+            )
+        revalidatePath("/dashboard/settings")
+        return {success: "settings updated"}
     }));

@@ -1,6 +1,6 @@
 'use server';
 
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import {createSafeActionClient} from "next-safe-action";
 import {RegisterSchema} from "@/types/register-schema";
 import {db} from "@/server/db";

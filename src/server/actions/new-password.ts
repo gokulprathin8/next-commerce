@@ -6,7 +6,7 @@ import {getPasswordResetTokenByToken} from "@/server/actions/tokens";
 import {db} from "@/server/db";
 import {eq} from "drizzle-orm";
 import {passwordResetTokens, users} from "@/server/schema";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const passwordReset = createSafeActionClient()
 .schema(NewPasswordSchema)
