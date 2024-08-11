@@ -4,9 +4,13 @@ import {createSafeActionClient} from "next-safe-action";
 import {LoginSchema} from "@/types/login-schema";
 import {db} from "@/server/db";
 import {eq} from "drizzle-orm";
-import {users} from "@/server/schema";
-import {generateEmailVerificationToken} from "@/server/actions/tokens";
-import {sendVerificationEmail} from "@/server/actions/sendEmail";
+import {twoFactorTokens, users} from "@/server/schema";
+import {
+    generateEmailVerificationToken,
+    generateTwoFactorToken,
+    getTwoFactorTokenByEmail
+} from "@/server/actions/tokens";
+import {sendTwoFactorTokenByEmail, sendVerificationEmail} from "@/server/actions/sendEmail";
 import {signIn} from "@/server/auth";
 import {AuthError} from "next-auth";
 import {isRedirectError} from "next/dist/client/components/redirect";
@@ -33,6 +37,26 @@ export const emailSignIn = createSafeActionClient()
             }
 
             // 2FA TODO
+            if (existingUser.twoFactorEnabled && existingUser.email) {
+                if (code) {
+                    const twoFactorToken = await getTwoFactorTokenByEmail(
+                        existingUser.email
+                    )
+                    if (!twoFactorToken || twoFactorToken.token !== code) {
+                        return { error: "Invalid Token" }
+                    }
+                    const hasExpired = new Date(twoFactorToken.expires) < new Date()
+                    if (hasExpired) return { error: "Token has expired" }
+                    await db
+                        .delete(twoFactorTokens)
+                        .where(eq(twoFactorTokens.id, twoFactorToken.id))
+                } else {
+                    const token = await generateTwoFactorToken(existingUser.email)
+                    if (!token) return {error: "token not generated"}
+                    await sendTwoFactorTokenByEmail(token[0].email, token[0].token)
+                    return { twoFactor: "Two Factor Token Sent!" }
+                }
+            }
 
             await signIn("credentials", {
                 email,

@@ -15,3 +15,15 @@ export async function sendVerificationEmail(email: string, token: string) {
     if (error) return console.log(error)
     if (data) return data
 }
+
+export async function sendTwoFactorTokenByEmail(email: string, token: string) {
+    const {data, error} = await resend.emails.send({
+        from: "onboarding@resend.dev",
+        to: email,
+        subject: "Sprout & Scribble - 2FA",
+        html: `Your 2FA code is ${token}`
+    })
+    if (error) return console.log(error)
+    if (data) return data
+}
+

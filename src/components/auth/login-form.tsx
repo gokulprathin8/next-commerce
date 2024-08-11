@@ -18,7 +18,7 @@ import FormError from "@/components/auth/form-error";
 import {FormSuccess} from "@/components/auth/form-success";
 
 export const LoginForm = () => {
-    const form = useForm({
+    const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
             email: '',
@@ -28,9 +28,14 @@ export const LoginForm = () => {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [showTwoFactor, setShowTwoFactor] = useState(false);
+
     const {execute, status} = useAction(emailSignIn, {
         onSuccess({data}) {
             setSuccess(String(data?.success));
+            if (data?.twoFactor) {
+                setShowTwoFactor(true);
+            }
         },
         onError({error}) {
             setError(String(error));
@@ -50,6 +55,27 @@ export const LoginForm = () => {
         <div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
+                    {showTwoFactor && (
+                        <FormField
+                            control={form.control}
+                            name="code"
+                            render={({field}) => <FormItem>
+                                <FormLabel>We have sent you a two-factor code to your email.</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        alt="email"
+                                        type="email"
+                                        autoComplete="email"
+                                        placeholder="johndoe@example.com"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription />
+                                <FormMessage />
+                            </FormItem>}
+                        />
+                    )}
+
                     <FormField
                         control={form.control}
                         name="email"
