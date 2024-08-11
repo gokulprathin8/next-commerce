@@ -16,9 +16,7 @@ export const EmailVerificationForm = () => {
     const [success, setSuccess] = useState("");
 
     const handleVerification = useCallback(() => {
-        console.log('comes here 1')
         if (success || error) return
-        console.log('comes here 2')
         if (!token) {
             setError("No token found!");
             return;

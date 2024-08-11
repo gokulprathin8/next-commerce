@@ -27,7 +27,6 @@ export const UserButton = ({user}: Session) => {
     function switchThemeState() {
         setIsChecked((prev) => !prev);
         setTheme(themeState);
-        console.log(themeState, isChecked);
     }
 
     return (

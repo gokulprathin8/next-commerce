@@ -39,7 +39,6 @@ export const LoginForm = () => {
 
     function onSubmit(values: z.infer<typeof LoginSchema>) {
         execute(values);
-        console.log(values);
     }
 
     return <AuthCard

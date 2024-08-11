@@ -8,7 +8,6 @@ export async function getPosts() {
     if (!posts) {
         return {error: "no posts found"};
     }
-    console.log(posts);
     return {success: posts};
 }
 

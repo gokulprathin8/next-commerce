@@ -22,6 +22,8 @@ import {Switch} from "@/components/ui/switch";
 import FormError from "@/components/auth/form-error";
 import {FormSuccess} from "@/components/auth/form-success";
 import {useState} from "react";
+import {useAction} from "next-safe-action/hooks";
+import {settingsAction} from "@/server/actions/settings";
 
 
 type SettingsForm = {
@@ -30,8 +32,8 @@ type SettingsForm = {
 
 export default function SettingsCard(session: SettingsForm) {
 
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>();
+    const [error, setError] = useState<string | undefined>();
+    const [success, setSuccess] = useState<string | undefined>();
     const [avatarUploading, setAvatarUploading] = useState(false);
 
     const form = useForm<z.infer<typeof SettingsSchema>>({
@@ -41,14 +43,26 @@ export default function SettingsCard(session: SettingsForm) {
             newPassword: undefined,
             name: session.session.user?.name || undefined,
             email: session.session.user?.email || undefined,
+            image: session.session.user.image || undefined,
             isTwoFactorEnabled: session.session.user?.isTwoFactorEnabled|| undefined,
         }
     })
 
+    const {execute, status} = useAction(settingsAction, {
+        onSuccess: ({data}) => {
+            if (data && data.success) {
+                setSuccess(data.success);
+            }
+            if (data && data.error) {
+                setError(data.error);
+            }
+        }
+    })
+
     function onSubmit(values: z.infer<typeof SettingsSchema>) {
-        // execute(values);
+        console.log(values);
+        execute(values);
     }
-    console.log(session.session);
 
     return (
         <Card>
@@ -119,7 +133,7 @@ export default function SettingsCard(session: SettingsForm) {
                                     <FormControl>
                                         <Input
                                             placeholder="************"
-                                            disabled={status === "executing"}
+                                            disabled={status === "executing" || session.session.user.isOAuth}
                                             {...field}
                                         />
                                     </FormControl>
@@ -140,7 +154,7 @@ export default function SettingsCard(session: SettingsForm) {
                                     <FormControl>
                                         <Input
                                             placeholder="************"
-                                            disabled={status === "executing"}
+                                            disabled={status === "executing" || session.session.user.isOAuth}
                                             {...field}
                                         />
                                     </FormControl>
@@ -160,7 +174,7 @@ export default function SettingsCard(session: SettingsForm) {
                                     <FormLabel>Two Factor Authentication</FormLabel>
                                     <FormDescription>Enable two factor authentication for your account</FormDescription>
                                     <FormControl>
-                                       <Switch disabled={status === 'executing'}/>
+                                       <Switch disabled={status === 'executing' || session.session.user.isOAuth }/>
                                     </FormControl>
                                     <FormDescription>
                                         This is your public display name.
@@ -170,8 +184,8 @@ export default function SettingsCard(session: SettingsForm) {
                             )}
                         />
 
-                        <FormError />
-                        <FormSuccess />
+                        <FormError message={error} />
+                        <FormSuccess message={success}/>
                         <Button type="submit" disabled={status === 'executing' || avatarUploading}>Update your settings</Button>
                     </form>
                 </Form>

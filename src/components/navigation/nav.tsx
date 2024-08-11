@@ -8,7 +8,6 @@ import Image from "next/image";
 
 export default async function Nav() {
     const session = await auth();
-    console.log(session);
 
     return (
         <header className="py-4">

@@ -38,7 +38,6 @@ export const RegisterForm = () => {
     });
 
     function onSubmit(values: z.infer<typeof RegisterSchema>) {
-        console.log(values);
         execute(values);
     }
 
