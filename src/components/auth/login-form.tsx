@@ -16,6 +16,7 @@ import {cn} from "@/lib/utils";
 import {useState} from "react";
 import FormError from "@/components/auth/form-error";
 import {FormSuccess} from "@/components/auth/form-success";
+import {InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot} from "@/components/ui/input-otp";
 
 export const LoginForm = () => {
     const form = useForm<z.infer<typeof LoginSchema>>({
@@ -55,31 +56,37 @@ export const LoginForm = () => {
         <div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                    {showTwoFactor && (
+                    {showTwoFactor ? (
                         <FormField
                             control={form.control}
                             name="code"
                             render={({field}) => <FormItem>
                                 <FormLabel>We have sent you a two-factor code to your email.</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        alt="email"
-                                        type="email"
-                                        autoComplete="email"
-                                        placeholder="johndoe@example.com"
-                                        {...field}
-                                    />
+                                    <InputOTP {...field} maxLength={6}>
+                                        <InputOTPGroup>
+                                            <InputOTPSlot index={0} />
+                                            <InputOTPSlot index={1} />
+                                            <InputOTPSlot index={2} />
+                                        </InputOTPGroup>
+                                        <InputOTPSeparator />
+                                        <InputOTPGroup>
+                                            <InputOTPSlot index={3} />
+                                            <InputOTPSlot index={4} />
+                                            <InputOTPSlot index={5} />
+                                        </InputOTPGroup>
+                                    </InputOTP>
                                 </FormControl>
                                 <FormDescription />
                                 <FormMessage />
                             </FormItem>}
                         />
-                    )}
-
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({field}) => <FormItem>
+                    ):
+                        <>
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({field}) => <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
                                     <Input
@@ -93,12 +100,12 @@ export const LoginForm = () => {
                                 <FormDescription />
                                 <FormMessage />
                             </FormItem>}
-                    />
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({field}) => <FormItem>
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({field}) => <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
                                     <Input
@@ -112,15 +119,18 @@ export const LoginForm = () => {
                                 <FormDescription />
                                 <FormMessage />
                             </FormItem>}
-                    />
-                    <FormSuccess message={success} />
-                    <FormError message={error} />
-                    <Button size="sm" variant="link" asChild>
-                        <Link href="/auth/reset">Forgot your password?</Link>
-                    </Button>
+                        />
+                        <FormSuccess message={success} />
+                        <FormError message={error} />
+                        <Button size="sm" variant="link" asChild>
+                            <Link href="/auth/reset">Forgot your password?</Link>
+                        </Button>
+                        </>
+                    }
+
                     <div className="flex justify-center ">
                         <Button className={cn('w-full', status === 'executing' ? 'animate-pulse' : '')}>
-                            Log in
+                            {showTwoFactor ? "Verify" : "Sign In"}
                         </Button>
                     </div>
                 </form>
