@@ -24,6 +24,7 @@ import {FormSuccess} from "@/components/auth/form-success";
 import {useState} from "react";
 import {useAction} from "next-safe-action/hooks";
 import {settingsAction} from "@/server/actions/settings";
+import {UploadButton} from "@/app/api/uploadthing/upload";
 
 
 type SettingsForm = {
@@ -106,12 +107,34 @@ export default function SettingsCard(session: SettingsForm) {
                                            <Image
                                                src={form.getValues('image')!}
                                                className="rounded-full"
-                                               width={42}
-                                               height={42}
+                                               width={45}
+                                               height={45}
                                                alt="user-form-image"
                                            />
                                        )}
-                                   </div>
+                                       <UploadButton
+                                           className="scale-75 ut-button:ring-primary ut-button:bg-primary/75 hover:bg-primary/100 ut:button:transition-all ut-button:duration-500 ut-allowed-content:hidden"
+                                           endpoint="avatarUploader"
+                                           onUploadBegin={() => {setAvatarUploading(true)}}
+                                           onUploadError={(error) => {form.setError('image', {
+                                               type: 'validate',
+                                               message: error.message
+                                           })
+                                               setAvatarUploading(false);
+                                           }}
+                                           onUploadAborted={() => setAvatarUploading(false)}
+                                           onClientUploadComplete={(response) => {
+                                               form.setValue("image", response[0].url)
+                                               setAvatarUploading(false)
+                                               return
+                                           }}
+                                           content={{
+                                           button({ready}) {
+                                               if (ready) return <div>Change Avatar</div>
+                                               return <div>Uploading...</div>
+                                           }
+                                       }} />
+                                       </div>
                                     <FormControl>
                                         <Input placeholder="User image" type="hidden" disabled={status === "executing"} {...field} />
                                     </FormControl>
