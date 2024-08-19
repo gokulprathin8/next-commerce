@@ -9,11 +9,11 @@ import {FormSuccess} from "@/components/auth/form-success";
 import FormError from "@/components/auth/form-error";
 
 export const EmailVerificationForm = () => {
-    const token = useSearchParams().get('token');
-    const router = useRouter();
+  const token = useSearchParams().get('token');
+  const router = useRouter();
 
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
     const handleVerification = useCallback(() => {
         if (success || error) return

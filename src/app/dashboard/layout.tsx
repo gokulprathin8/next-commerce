@@ -4,9 +4,10 @@ import {auth} from "@/server/auth";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
 import {usePathname} from "next/navigation";
+import DashboardNav from "@/components/navigation/dashboard-nav";
 
 export default async function DashboardLayout({children}: { children: React.ReactNode }) {
-    const pathName = usePathname();
+
     const session = await auth();
 
     const userLinks = [
@@ -24,21 +25,7 @@ export default async function DashboardLayout({children}: { children: React.Reac
 
     return (
         <div>
-            <nav className="py-2 overflow-auto">
-                <ul className="flex gap-6 font-bold text-sm">
-                    {allLinks.map((link) => (
-                        <li key={link.path}>
-                            <Link
-                                className={cn("flex gap-1 flex-col items-center", pathName === link.path ? "" : "")}
-                                href={link.path}
-                            >
-                                {link.icon}
-                                {link.label}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </nav>
+            <DashboardNav allLinks={allLinks} />
             {children}
         </div>
     )
