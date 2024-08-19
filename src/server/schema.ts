@@ -1,4 +1,4 @@
-import {boolean, integer, pgEnum, pgTable, primaryKey, serial, text, timestamp} from 'drizzle-orm/pg-core';
+import {boolean, integer, pgEnum, pgTable, primaryKey, real, serial, text, timestamp} from 'drizzle-orm/pg-core';
 import {AdapterAccountType} from "@auth/core/adapters";
 import {createId} from "@paralleldrive/cuid2";
 
@@ -98,5 +98,16 @@ export const twoFactorTokens = pgTable(
         expires: timestamp("expires", {mode: "date"}).notNull(),
         email: text("email").notNull(),
         userId: text("userId").references(() => users.id, {onDelete: "cascade"}),
+    }
+)
+
+export const products = pgTable(
+    "products",
+    {
+        id: serial('id').primaryKey(),
+        title: text("title").notNull(),
+        description: text("description"),
+        createdAt: timestamp("createdAt").defaultNow(),
+        price: real("price").notNull(),
     }
 )
