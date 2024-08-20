@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -19,10 +18,10 @@ import Tiptap from "@/app/dashboard/add-product/tiptap";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useAction} from "next-safe-action/hooks";
 import {createProduct} from "@/server/actions/create-product";
-
+import {useRouter} from "next/navigation";
+import {toast} from "sonner";
 
 export default function ProductForm() {
-
     const form = useForm<zProductSchema>({
         resolver: zodResolver(ProductSchema),
         defaultValues: {
@@ -33,13 +32,20 @@ export default function ProductForm() {
         mode: "onSubmit"
     })
 
+    const router = useRouter();
+
     const {execute, status} = useAction(createProduct, {
         onSuccess: ({ data, input }) => {
             if (data?.success) {
                 console.log(data.success)
+                router.push("/dashboard/products/")
+                toast.success(data.success)
             }
         },
-        onError: ({error}) => console.log(error),
+        onError: ({error}) => {
+            console.log(error);
+            toast.error(error.fetchError);
+        },
     })
 
     function onSubmit(values: zProductSchema) {
@@ -49,8 +55,8 @@ export default function ProductForm() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Card Title</CardTitle>
-                <CardDescription>Card Description</CardDescription>
+                <CardTitle>Create a New Product</CardTitle>
+                <CardDescription>Fill out the below form to add a new product</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
@@ -103,9 +109,6 @@ export default function ProductForm() {
                     </form>
                 </Form>
             </CardContent>
-            <CardFooter>
-                <p>Card Footer</p>
-            </CardFooter>
         </Card>
     )
 }
