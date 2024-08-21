@@ -42,6 +42,9 @@ export default function ProductForm() {
                 toast.success(data.success)
             }
         },
+        onExecute: ({input}) => {
+            toast.loading(`creating product: ${input.title}`)
+        },
         onError: ({error}) => {
             console.log(error);
             toast.error(error.fetchError);
