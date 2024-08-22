@@ -1,8 +1,16 @@
 import {db} from "@/server/db";
-import {desc} from "drizzle-orm";
 import placeholder from "@/assets/placeholder-image.png"
 import {DataTable} from "@/app/dashboard/products/data-table";
 import {columns} from "@/app/dashboard/products/columns";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import {Input} from "@/components/ui/input";
 
 export default async function Products() {
 
@@ -24,8 +32,15 @@ export default async function Products() {
 
     return (
         <div>
-            <p>Products</p>
-            <DataTable columns={columns} data={dataTable} />
+            <Card>
+                <CardHeader>
+                    <CardTitle>Your products</CardTitle>
+                    <CardDescription>Update, delete and edit your products</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <DataTable columns={columns} data={dataTable} />
+                </CardContent>
+            </Card>
         </div>
     )
 }
