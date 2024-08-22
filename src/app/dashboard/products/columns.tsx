@@ -12,6 +12,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
+import {useAction} from "next-safe-action/hooks";
+import {deleteProductAction} from "@/server/actions/delete-product";
+import {toast} from "sonner";
+import Link from "next/link";
+import {products} from "@/server/schema";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -28,6 +33,19 @@ type ProductColumn = {
     price: number,
     image: string,
     variants: string[]
+}
+
+async function deleteProductWrapper(id: number) {
+    const data = await deleteProductAction({id})
+    if (!data) {
+        throw new Error("product delete: no data found for " + id)
+    }
+    if (data.data && data.data.success) {
+        toast.success(data.data.success)
+    }
+    if (data.data && data.data.error) {
+        toast.error(data.data.error)
+    }
 }
 
 export const columns: ColumnDef<ProductColumn>[] = [
@@ -79,8 +97,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuItem className="dark:focus:bg-primary focus:bg-primary/50 cursor-pointer">Edit Product</DropdownMenuItem>
-                        <DropdownMenuItem className="dark:focus:bg-destructive focus:bg-destructive/50 cursor-pointer">Delete Product</DropdownMenuItem>
+                        <DropdownMenuItem className="dark:focus:bg-primary focus:bg-primary/50 cursor-pointer">
+                            <Link href={`/dashboard/add-product?id=${product.id}`}>Edit Product</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => deleteProductWrapper(product.id)} className="dark:focus:bg-destructive focus:bg-destructive/50 cursor-pointer">Delete Product</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )

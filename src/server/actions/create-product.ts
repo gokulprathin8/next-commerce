@@ -5,6 +5,7 @@ import {ProductSchema} from "@/types/product-schema";
 import {db} from "@/server/db";
 import {products} from "@/server/schema";
 import {eq} from "drizzle-orm";
+import {revalidatePath} from "next/cache";
 
 export const createProduct = createSafeActionClient()
     .schema(ProductSchema)
@@ -19,6 +20,7 @@ export const createProduct = createSafeActionClient()
                 await db.update(products)
                     .set({description: description, price: price, title: title})
                     .where(eq(products.id, id))
+                revalidatePath("/dashboard/products")
                 return {success: "product updated!"}
             }
             if (!id) {
@@ -27,6 +29,7 @@ export const createProduct = createSafeActionClient()
                     price: price,
                     title: title
                 })
+                revalidatePath("/dashboard/products")
                 return {success: `product ${title} has been created`}
             }
         } catch (err) {

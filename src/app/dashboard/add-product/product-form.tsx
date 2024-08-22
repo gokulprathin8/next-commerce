@@ -18,8 +18,10 @@ import Tiptap from "@/app/dashboard/add-product/tiptap";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useAction} from "next-safe-action/hooks";
 import {createProduct} from "@/server/actions/create-product";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {toast} from "sonner";
+import {getProductAction} from "@/server/actions/get-product";
+import {useEffect} from "react";
 
 export default function ProductForm() {
     const form = useForm<zProductSchema>({
@@ -33,6 +35,29 @@ export default function ProductForm() {
     })
 
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
+
+    const checkProduct = async (id: number) => {
+        if (id) {
+            const data = await getProductAction({id})
+            if (data?.data && data.data.error) {
+                toast.error(data?.data.error);
+            }
+            if (data?.data && data.data.success) {
+                form.setValue("title", data.data.success.title);
+                form.setValue("price", data.data.success.price);
+                form.setValue("description", data.data.success.description as string);
+                form.setValue("id", data.data.success.id);
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (id) {
+            checkProduct(parseInt(id)).then(r => {})
+        }
+    }, [])
 
     const {execute, status} = useAction(createProduct, {
         onSuccess: ({ data, input }) => {
@@ -58,8 +83,8 @@ export default function ProductForm() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Create a New Product</CardTitle>
-                <CardDescription>Fill out the below form to add a new product</CardDescription>
+                <CardTitle>{id ? "Edit Product" : "Create a New Product"}</CardTitle>
+                <CardDescription>{id ? "Change your product details below" : "Fill out the below form to add a new product"}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
