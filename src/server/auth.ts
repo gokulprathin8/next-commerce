@@ -53,6 +53,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return token;
         }
     },
+
     providers: [
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID!,
