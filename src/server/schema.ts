@@ -117,7 +117,7 @@ export const productVariants = pgTable(
   "productVariants",
   {
     id: serial("id").primaryKey(),
-    color: text("color").primaryKey(),
+    color: text("color").notNull(),
     productType: text("productType").notNull(),
     updated: timestamp("updated").defaultNow(),
     productId: serial("productId")

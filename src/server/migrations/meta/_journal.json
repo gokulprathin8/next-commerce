@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1723414572455,
-      "tag": "0000_wild_white_queen",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1724032333569,
-      "tag": "0001_noisy_guardsmen",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1724536187377,
-      "tag": "0002_round_dracula",
+      "when": 1724536380955,
+      "tag": "0000_bizarre_black_knight",
       "breakpoints": true
     }
   ]
